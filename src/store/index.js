@@ -1,9 +1,13 @@
+import { auth } from 'firebase'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import * as fb from '../firebase'
 import router from '../router/index'
+import Toasted from 'vue-toasted';
+
 
 Vue.use(Vuex)
+Vue.use(Toasted)
 
 // realtime firebase
 fb.postsCollection.orderBy('createdOn', 'desc').onSnapshot(snapshot => {
@@ -39,9 +43,27 @@ const store = new Vuex.Store({
     async login({ dispatch }, form) {
       // sign user in
       const { user } = await fb.auth.signInWithEmailAndPassword(form.email, form.password)
+      .catch((error) => {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log("HIHI", errorMessage)
+        Vue.toasted.error(errorMessage, { 
+          theme: "bubble", 
+          position: "top-right", 
+          duration : 5000,
+          
+       })
+      });
 
       // fetch user profile and set in state
       dispatch('fetchUserProfile', user)
+      Vue.toasted.success("Login successful!", { 
+        theme: "bubble", 
+        position: "top-right", 
+        duration : 5000,
+        
+     })
     },
     async signup({ dispatch }, form) {
       // sign user up
@@ -63,10 +85,14 @@ const store = new Vuex.Store({
 
       // set user profile in state
       commit('setUserProfile', userProfile.data())
+      
+
 
       // change route to dashboard
       if (router.currentRoute.path === '/login') {
-        router.push('/')
+        router.push('/', () => {
+          console.log("USER", userProfile);
+       })
       }
     },
     async logout({ commit }) {
