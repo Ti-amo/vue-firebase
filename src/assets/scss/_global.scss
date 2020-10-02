@@ -86,7 +86,9 @@ section {
 		display: block;
 	}
 }
-
+.displayNone {
+	display: none;
+}
 .col1,
 .col2 {
 	flex-grow: 1;

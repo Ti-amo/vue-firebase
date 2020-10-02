@@ -5,21 +5,23 @@
       <p>add a comment</p>
       <form @submit.prevent>
         <textarea v-model.trim="comment"></textarea>
-        <button @click="addComment()" :disabled="comment == ''" class="button">add comment</button>
+        <button @click="addComment()" :disabled="comment == ''" class="button">
+          add comment
+        </button>
       </form>
     </div>
   </div>
 </template>
 
 <script>
-import { commentsCollection, postsCollection, auth } from '@/firebase'
+import { commentsCollection, postsCollection, auth } from "@/firebase";
 
 export default {
-  props: ['post'],
+  props: ["post"],
   data() {
     return {
-      comment: ''
-    }
+      comment: "",
+    };
   },
   methods: {
     async addComment() {
@@ -29,17 +31,23 @@ export default {
         content: this.comment,
         postId: this.post.id,
         userId: auth.currentUser.uid,
-        userName: this.$store.state.userProfile.name
-      })
+        userName: this.$store.state.userProfile.name,
+      });
+      await this.post.comments.push({
+        content: this.comment,
+        userId: auth.currentUser.uid,
+        userName: this.$store.state.userProfile.name,
+      }),
 
-      // update comment count on post
       await postsCollection.doc(this.post.id).update({
-        comments: parseInt(this.post.comments) + 1
-      })
+        countcomments: parseInt(this.post.countcomments) + 1,
+        
+      });
+      await console.log("addComment -> this.post", this.post.comments);
 
       // close modal
-      this.$emit('close')
-    }
-  }
-}
+      this.$emit("close");
+    },
+  },
+};
 </script>

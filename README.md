@@ -44,20 +44,3 @@ npm run dev
 
 > For further instructions on building this project, [refer to our Vue.js tutorial](http://savvyapps.com/blog/definitive-guide-building-web-app-vuejs-firebase). You'll find it and many more resources on the [Savvy Apps blog](https://savvyapps.com/blog). Feel free to reach out to us with any questions or feedback via the [Savvy Apps website](https://savvyapps.com/), or connect with us on [Facebook](https://www.facebook.com/savvyapps/) and [Twitter](https://twitter.com/savvyapps).
 
-### License
-
-```
-Copyright 2020 Savvy Apps
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-   http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-```
