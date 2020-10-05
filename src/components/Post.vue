@@ -3,6 +3,7 @@
     <h5>{{ post.userName }}</h5>
     <span>{{ createdOnDate(post.createdOn) }}</span>
     <p>{{ contentTrimLength(post.content) }}</p>
+    <img class="banner" :src="post.picture" />
     <ul>
       <li>
         <a @click="toggleShowCommentModal()"
@@ -10,9 +11,16 @@
         >
       </li>
       <li>
-        <a @click="likePost(post.id, post.likes)">likes {{ post.likes }}</a>
+        <a @click="likePost(post.id, post.likes, post.isLiked)"
+          >likes {{ post.likes }}
+          <i :class="post.isLiked ? solidHeart : regularHeart"></i>
+        </a>
       </li>
-      <li><a @click="viewPost(post)">view full post</a></li>
+      <li>
+        <a v-show="post.comments.length" @click="viewPost(post)"
+          >view full post</a
+        >
+      </li>
     </ul>
     <transition name="fade">
       <div v-show="showPostModal" class="comments">
@@ -36,12 +44,14 @@ export default {
   props: ["post"],
   data() {
     return {
+      solidHeart: '',
+      regularHeart: 'fas fa-fire',
       selectedPost: {},
       showPostModal: false,
     };
   },
   computed: {
-    ...mapState(["userProfile", "posts", "comments","showCommentModal"]),
+    ...mapState(["userProfile", "posts", "comments", "showCommentModal"]),
   },
   methods: {
     createdOnDate(val) {
@@ -58,21 +68,15 @@ export default {
       }
       return `${val.substring(0, 200)}...`;
     },
-   
+
     toggleShowCommentModal() {
-       this.$store.dispatch('setShowCommentModal')
-        // console.log("toggleCommentModal -> showCommentModal", this.showCommentModal)
-        console.log("toggleShowCommentModal -> showCommentModal", this.showCommentModal)
-      this.$emit('childToParent', this.post)
-      // if opening modal set selectedPost, else clear
-    //   if (this.showCommentModal) {
-    //     this.selectedPost = post;
-    //   } else {
-    //     this.selectedPost = {};
-    //   }
+      this.$store.dispatch("setShowCommentModal");
+      this.$emit("childToParent", this.post);
     },
-    likePost(id, likesCount) {
-      this.$store.dispatch("likePost", { id, likesCount });
+    likePost(id, likesCount, isLiked) {
+      console.log("likePost -> isLiked", this.post.isLiked);
+
+      this.$store.dispatch("likePost", { id, likesCount, isLiked });
     },
     viewPost(post) {
       this.showPostModal = !this.showPostModal;

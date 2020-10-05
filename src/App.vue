@@ -1,5 +1,7 @@
 <template>
   <div id="app">
+    <link rel="stylesheet" 
+        href="../node_modules/@fortawesome/fontawesome-free/css/all.css">
     <SiteNav v-if="showNav"></SiteNav>
     <router-view/>
   </div>

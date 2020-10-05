@@ -48,8 +48,6 @@ export default {
 
       // close modal
       this.$store.dispatch("setShowCommentModal");
-
-      console.log("addComment -> this.post", this.post.comments);
     },
     close() {
       this.$store.dispatch("setShowCommentModal");

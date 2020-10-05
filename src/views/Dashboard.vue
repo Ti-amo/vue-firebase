@@ -10,8 +10,14 @@
     <section>
       <div class="col1">
         <div class="profile">
-          <h5>{{ userProfile.name }}</h5>
-          <p>{{ userProfile.title }}</p>
+          <div class="header-profile">
+            <img src="../assets/images/icon.jpg" alt="Avatar" class="avatar" />
+            <div class="header-profile-name">
+              <h5>{{ userProfile.name }}</h5>
+              <p>{{ userProfile.title }}</p>
+            </div>
+          </div>
+
           <div class="create-post">
             <p>create a post</p>
             <form @submit.prevent>
@@ -30,8 +36,11 @@
       <div class="col2">
         <div v-if="posts.length">
           <div v-for="post in posts" :key="post.id" class="post">
-            <Post :post="post" :showCommentModal="showCommentModal" @childToParent="toggleCommentModal">
-
+            <Post
+              :post="post"
+              :showCommentModal="showCommentModal"
+              @childToParent="toggleCommentModal"
+            >
             </Post>
           </div>
         </div>
@@ -49,7 +58,7 @@ import { commentsCollection } from "@/firebase";
 import { mapState } from "vuex";
 import moment from "moment";
 import CommentModal from "@/components/CommentModal";
-import Post from "@/components/Post"
+import Post from "@/components/Post";
 
 export default {
   components: {
@@ -68,7 +77,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["userProfile", "posts", "comments","showCommentModal"]),
+    ...mapState(["userProfile", "posts", "comments", "showCommentModal"]),
   },
   methods: {
     createdOnDate(val) {
@@ -90,25 +99,12 @@ export default {
       this.post.content = "";
     },
     toggleCommentModal(value) {
-      // this.$store.dispatch('setShowCommentModal')
       if (this.showCommentModal) {
-         this.selectedPost = value
+        this.selectedPost = value;
       } else {
         this.selectedPost = {};
       }
-      // 
-
-          console.log("jisooooo", value) // someValue
-
-      // if opening modal set selectedPost, else clear
-      
-    },
-    likePost(id, likesCount) {
-      this.$store.dispatch("likePost", { id, likesCount });
-    },
-    viewPost(post) {
-      this.showPostModal = !this.showPostModal;
-    },
+    }
   },
 };
 </script>
