@@ -41,9 +41,13 @@ const store = new Vuex.Store({
   state: {
     userProfile: {},
     posts: [],
-    comments: []
+    comments: [],
+    showCommentModal: false
   },
   mutations: {
+    setCommentModal(state, val) {
+      state.showCommentModal = val
+    },
     setUserProfile(state, val) {
       state.userProfile = val
     },
@@ -58,6 +62,10 @@ const store = new Vuex.Store({
     }
   },
   actions: {
+    setShowCommentModal({commit}) {
+      commit('setCommentModal', !store.state.showCommentModal)
+    },
+
     async login({ dispatch }, form) {
       // sign user in
       const { user } = await fb.auth.signInWithEmailAndPassword(form.email, form.password)

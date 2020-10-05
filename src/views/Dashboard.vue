@@ -30,74 +30,17 @@
       <div class="col2">
         <div v-if="posts.length">
           <div v-for="post in posts" :key="post.id" class="post">
-            <h5>{{ post.userName }}</h5>
-            <span>{{ createdOnDate(post.createdOn) }}</span>
-            <p>{{ contentTrimLength(post.content) }}</p>
-            <ul>
-              <li>
-                <a @click="toggleCommentModal(post)"
-                  >comments {{ post.countcomments }}</a
-                >
-              </li>
-              <li>
-                <a @click="likePost(post.id, post.likes)"
-                  >likes {{ post.likes }}</a
-                >
-              </li>
-              <li><a @click="viewPost(post)">view full post</a></li>
-            </ul>
-            <div v-show="showPostModal" class="comments">
-              <div
-                v-for="comment in post.comments"
-                :key="comment.id"
-                class="comment"
-              >
-                <p>{{ comment.userName }}</p>
-                <span>{{ createdOnDate(comment.createdOn) }}</span>
-                <p>{{ comment.content }}</p>
-              </div>
-            </div>
-        </div>
+            <Post :post="post" :showCommentModal="showCommentModal" @childToParent="toggleCommentModal">
+
+            </Post>
           </div>
-          
+        </div>
+
         <div v-else>
           <p class="no-results">There are currently no posts</p>
         </div>
       </div>
     </section>
-
-    <!-- full post modal -->
-    <!-- <transition name="fade">
-      <div v-if="showPostModal" class="p-modal">
-        <div class="p-container">
-          <a @click="closePostModal()" class="close">close</a>
-          <div class="post">
-            <h5>{{ fullPost.userName }}</h5>
-            <span>{{ createdOnDate(fullPost.createdOn) }}</span>
-            <p>{{ fullPost.content }}</p>
-            <ul>
-              <li>
-                <a>comments {{ fullPost.comments }}</a>
-              </li>
-              <li>
-                <a>likes {{ fullPost.likes }}</a>
-              </li>
-            </ul>
-          </div>
-          <div v-show="postComments.length" class="comments">
-            <div
-              v-for="comment in postComments"
-              :key="comment.id"
-              class="comment"
-            >
-              <p>{{ comment.userName }}</p>
-              <span>{{ createdOnDate(comment.createdOn) }}</span>
-              <p>{{ comment.content }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </transition> -->
   </div>
 </template>
 
@@ -106,17 +49,18 @@ import { commentsCollection } from "@/firebase";
 import { mapState } from "vuex";
 import moment from "moment";
 import CommentModal from "@/components/CommentModal";
+import Post from "@/components/Post"
 
 export default {
   components: {
     CommentModal,
+    Post,
   },
   data() {
     return {
       post: {
         content: "",
       },
-      showCommentModal: false,
       selectedPost: {},
       showPostModal: false,
       fullPost: {},
@@ -124,7 +68,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["userProfile", "posts", "comments"]),
+    ...mapState(["userProfile", "posts", "comments","showCommentModal"]),
   },
   methods: {
     createdOnDate(val) {
@@ -145,15 +89,19 @@ export default {
       this.$store.dispatch("createPost", { content: this.post.content });
       this.post.content = "";
     },
-    toggleCommentModal(post) {
-      this.showCommentModal = !this.showCommentModal;
-
-      // if opening modal set selectedPost, else clear
+    toggleCommentModal(value) {
+      // this.$store.dispatch('setShowCommentModal')
       if (this.showCommentModal) {
-        this.selectedPost = post;
+         this.selectedPost = value
       } else {
         this.selectedPost = {};
       }
+      // 
+
+          console.log("jisooooo", value) // someValue
+
+      // if opening modal set selectedPost, else clear
+      
     },
     likePost(id, likesCount) {
       this.$store.dispatch("likePost", { id, likesCount });

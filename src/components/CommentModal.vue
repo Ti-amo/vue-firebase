@@ -1,7 +1,7 @@
 <template>
   <div class="c-modal">
     <div class="c-container">
-      <a @click="$emit('close')">close</a>
+      <a @click="close()">close</a>
       <p>add a comment</p>
       <form @submit.prevent>
         <textarea v-model.trim="comment"></textarea>
@@ -33,20 +33,26 @@ export default {
         userId: auth.currentUser.uid,
         userName: this.$store.state.userProfile.name,
       });
-      await this.post.comments.push({
+
+      let newComment = {
+        createdOn: new Date(),
         content: this.comment,
         userId: auth.currentUser.uid,
         userName: this.$store.state.userProfile.name,
-      }),
+      };
 
       await postsCollection.doc(this.post.id).update({
         countcomments: parseInt(this.post.countcomments) + 1,
-        
+        comments: [...this.post.comments, newComment],
       });
-      await console.log("addComment -> this.post", this.post.comments);
 
       // close modal
-      this.$emit("close");
+      this.$store.dispatch("setShowCommentModal");
+
+      console.log("addComment -> this.post", this.post.comments);
+    },
+    close() {
+      this.$store.dispatch("setShowCommentModal");
     },
   },
 };
